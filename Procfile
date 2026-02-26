@@ -1,1 +1,1 @@
-web: gunicorn kepaarfm.wsgi --log-file -
+web: gunicorn kepaarfm.wsgi --bind 0.0.0.0:$PORT
