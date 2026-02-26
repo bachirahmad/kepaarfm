@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Don confirmé — Kepaar FM 99.7{% endblock %}
+
+{% block content %}
+<section style="min-height:70vh;display:flex;align-items:center;justify-content:center;padding:5rem 2rem">
+  <div style="text-align:center;max-width:500px">
+    <div style="font-size:4rem;margin-bottom:1rem">🤲</div>
+    <div class="bismillah" style="font-size:1.5rem;margin-bottom:1rem">جَزَاكَ اللَّهُ خَيْرًا</div>
+    <h2 class="section-title" style="text-align:center">
+      Barakallahu Fikoum !
+    </h2>
+    <p style="color:var(--text-muted);line-height:1.8;margin:1rem 0">
+      Votre don de <strong style="color:var(--gold)">{{ don.montant|floatformat:0 }} FCFA</strong>
+      via <strong style="color:white">{{ don.get_methode_display }}</strong> a bien été enregistré.
+    </p>
+    <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:2rem">
+      Que Allah récompense votre générosité et en fasse une Sadaqa Jariya pour vous et vos proches.
+    </p>
+    <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);
+                border-radius:12px;padding:1rem;margin-bottom:2rem;font-size:0.85rem;color:var(--text-muted)">
+      📋 Référence : <strong style="color:var(--gold)">#{{ don.pk|stringformat:"05d" }}</strong>
+    </div>
+    <a href="{% url 'core:accueil' %}" class="btn-don"
+       style="display:inline-block;text-decoration:none;padding:12px 30px;border-radius:12px">
+      ← Retour à l'accueil
+    </a>
+  </div>
+</section>
+{% endblock %}

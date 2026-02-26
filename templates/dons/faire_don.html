@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Faire un don — Kepaar FM 99.7{% endblock %}
+
+{% block content %}
+<section class="dons" style="padding-top:5rem">
+  <div class="inner">
+    <div class="section-label"><span>Soutien — Jëf bu baax</span></div>
+    <h2 class="section-title">Soutenez Kepaar FM<br>
+      <span style="color:var(--gold)">Contribuez à la Dawah</span>
+    </h2>
+
+    <div class="dons-wrapper">
+      <!-- INFO GAUCHE -->
+      <div class="dons-info">
+        <h3>Votre don, une Sadaqa Jariya</h3>
+        <p>En soutenant Kepaar FM 99.7, vous contribuez directement à la diffusion du message islamique au Sénégal et dans le monde entier.</p>
+        <div class="dons-ayat">
+          <span class="arabe">مَنْ ذَا الَّذِي يُقْرِضُ اللَّهَ قَرْضًا حَسَنًا فَيُضَاعِفَهُ لَهُ</span>
+          <span class="trad">"Qui est celui qui accordera à Allah un beau prêt, qu'Il lui multipliera ?" — Al-Baqara 2:245</span>
+        </div>
+        <div class="dons-impact">
+          <div class="impact-item"><span>📡</span> Maintenir la diffusion FM 24h/24</div>
+          <div class="impact-item"><span>🎙️</span> Produire plus d'émissions de qualité</div>
+          <div class="impact-item"><span>🌍</span> Étendre la portée internationale</div>
+          <div class="impact-item"><span>📱</span> Développer l'application mobile</div>
+          <div class="impact-item"><span>🕌</span> Former les animateurs</div>
+        </div>
+      </div>
+
+      <!-- FORMULAIRE -->
+      <div class="don-card">
+        <h4>🤲 Faire un don</h4>
+        <p class="sub">Choisissez un montant et votre moyen de paiement</p>
+
+        <form method="POST" action="{% url 'dons:faire_don' %}">
+          {% csrf_token %}
+
+          <!-- Montants suggérés -->
+          <div class="amount-grid">
+            <button type="button" class="amount-btn" onclick="selectAmount(this,'500')">500 FCFA</button>
+            <button type="button" class="amount-btn" onclick="selectAmount(this,'1000')">1 000 FCFA</button>
+            <button type="button" class="amount-btn" onclick="selectAmount(this,'2000')">2 000 FCFA</button>
+            <button type="button" class="amount-btn" onclick="selectAmount(this,'5000')">5 000 FCFA</button>
+            <button type="button" class="amount-btn" onclick="selectAmount(this,'10000')">10 000 FCFA</button>
+            <button type="button" class="amount-btn" onclick="selectAmount(this,'25000')">25 000 FCFA</button>
+          </div>
+
+          <input type="number" name="montant" id="montantInput" class="amount-custom"
+                 placeholder="Ou entrez un montant libre (FCFA)" required>
+
+          <!-- Infos donateur -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-bottom:1rem">
+            <input type="text" name="nom" class="amount-custom" placeholder="Votre nom (optionnel)" style="margin-bottom:0">
+            <input type="tel" name="telephone" class="amount-custom" placeholder="Téléphone" style="margin-bottom:0">
+          </div>
+          <input type="email" name="email" class="amount-custom" placeholder="Email (optionnel)">
+
+          <!-- Méthode de paiement -->
+          <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.7rem;font-weight:600;
+                     letter-spacing:0.5px;text-transform:uppercase">
+            Choisir le moyen de paiement
+          </p>
+          <input type="hidden" name="methode" id="methodeInput" required>
+          <div class="payment-methods">
+            <button type="button" class="pay-btn wave" onclick="selectPay(this,'wave')">
+              <span class="pay-icon">🌊</span> Wave
+            </button>
+            <button type="button" class="pay-btn om" onclick="selectPay(this,'orange_money')">
+              <span class="pay-icon">🟠</span> Orange Money
+            </button>
+            <button type="button" class="pay-btn free" onclick="selectPay(this,'free_money')">
+              <span class="pay-icon">🔴</span> Free Money
+            </button>
+            <button type="button" class="pay-btn card" onclick="selectPay(this,'carte')">
+              <span class="pay-icon">💳</span> Carte bancaire
+            </button>
+          </div>
+
+          <textarea name="message" class="amount-custom form-textarea"
+                    placeholder="Message (optionnel)" style="min-height:60px;resize:vertical"></textarea>
+
+          <button type="submit" class="btn-don">
+            🤲 &nbsp;Envoyer mon don — Barakallahu fikoum
+          </button>
+          <p class="don-note">🔒 Paiement sécurisé · Reçu par SMS/Email</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% block extra_js %}
+<script>
+function selectAmount(btn, val) {
+  document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('montantInput').value = val;
+}
+function selectPay(btn, method) {
+  document.querySelectorAll('.pay-btn').forEach(b => b.classList.remove('pay-selected'));
+  btn.classList.add('pay-selected');
+  document.getElementById('methodeInput').value = method;
+}
+</script>
+{% endblock %}
+{% endblock %}

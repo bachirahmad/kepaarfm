@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Actualités — Kepaar FM 99.7{% endblock %}
+
+{% block content %}
+<section class="news" style="padding-top:5rem">
+  <div class="inner">
+    <div class="section-label"><span>Actualités — Xibaar yi</span></div>
+    <h2 class="section-title">Dernières nouvelles<br>
+      <span style="color:var(--gold)">de l'Islam & du monde</span>
+    </h2>
+
+    {% if actualites %}
+    <div class="news-grid" style="margin-top:2.5rem">
+      {% for actu in actualites %}
+      <div class="news-card {% if forloop.first %}featured{% endif %}">
+        <div class="news-img">
+          {% if actu.image %}
+            <img src="{{ actu.image.url }}" alt="{{ actu.titre }}"
+                 style="width:100%;height:100%;object-fit:cover">
+          {% else %}
+            {% if actu.categorie == 'islam' %}🕌
+            {% elif actu.categorie == 'savoir' %}📖
+            {% elif actu.categorie == 'communaute' %}🤲
+            {% else %}🌍{% endif %}
+          {% endif %}
+        </div>
+        <div class="news-body">
+          <span class="news-tag">{{ actu.get_categorie_display }}</span>
+          <h3>{{ actu.titre }}</h3>
+          <p>{{ actu.contenu|truncatechars:150 }}</p>
+          <div class="news-date">📅 {{ actu.created_at|date:"d M Y" }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align:center;padding:4rem;color:var(--text-muted)">
+      <div style="font-size:3rem;margin-bottom:1rem">📰</div>
+      <p>Aucune actualité disponible pour le moment.</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

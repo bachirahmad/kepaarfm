@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Animateurs — Kepaar FM 99.7{% endblock %}
+
+{% block content %}
+<section class="animateurs" style="padding-top:5rem">
+  <div class="inner">
+    <div class="section-label"><span>Animateurs — Animateuryi</span></div>
+    <h2 class="section-title">Notre équipe<br>
+      <span style="color:var(--gold)">au service de l'Islam</span>
+    </h2>
+
+    {% if animateurs %}
+    <div class="anim-grid">
+      {% for anim in animateurs %}
+      <div class="anim-card">
+        <div class="anim-avatar">
+          {% if anim.photo %}
+            <img src="{{ anim.photo.url }}" alt="{{ anim.nom }}"
+                 style="width:100%;height:100%;object-fit:cover;border-radius:50%">
+          {% else %}
+            👨‍🎙️
+          {% endif %}
+        </div>
+        <h3>{{ anim.nom }}</h3>
+        <p class="role">{{ anim.role }}</p>
+        {% if anim.emission_principale %}
+        <p class="show">{{ anim.emission_principale }}</p>
+        {% endif %}
+        {% if anim.biographie %}
+        <p style="font-size:0.75rem;color:var(--text-muted);margin-top:0.7rem;line-height:1.5">
+          {{ anim.biographie|truncatechars:100 }}
+        </p>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align:center;padding:4rem;color:var(--text-muted)">
+      <div style="font-size:3rem;margin-bottom:1rem">🎙️</div>
+      <p>Les animateurs seront ajoutés prochainement via l'interface admin.</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

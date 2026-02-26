@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Programmes — Kepaar FM 99.7{% endblock %}
+
+{% block content %}
+<section class="programmes" style="padding-top:5rem">
+  <div class="inner">
+    <div class="section-label"><span>Programmes — Xeet yi</span></div>
+    <h2 class="section-title">Grille des émissions</h2>
+
+    <!-- ONGLETS JOURS -->
+    <div class="days-tabs">
+      {% for jour_val, jour_label in jours %}
+      <button class="day-tab {% if jour_actif == jour_val %}active{% endif %}"
+              onclick="window.location='?jour={{ jour_val }}'">
+        {{ jour_label }}
+      </button>
+      {% endfor %}
+    </div>
+
+    <!-- LISTE PROGRAMMES -->
+    <div class="programme-list">
+      {% if programmes %}
+        {% for prog in programmes %}
+        <div class="prog-item {% if prog.is_current %}current{% endif %}">
+          <span class="prog-time">
+            {{ prog.heure_debut|time:"H:i" }} – {{ prog.heure_fin|time:"H:i" }}
+          </span>
+          <div class="prog-icon">{{ prog.icone }}</div>
+          <div class="prog-info">
+            <h4>{{ prog.nom }}</h4>
+            {% if prog.description %}
+            <p>{{ prog.description }}</p>
+            {% endif %}
+            {% if prog.animateur %}
+            <p style="color:var(--gold);font-size:0.72rem;margin-top:2px">
+              🎙️ {{ prog.animateur.nom }}
+            </p>
+            {% endif %}
+          </div>
+          {% if prog.is_current %}
+          <div class="current-badge">
+            <div class="live-dot" style="background:var(--green-light);width:6px;height:6px"></div>
+            EN COURS
+          </div>
+          {% else %}
+          <span class="prog-lang">{{ prog.get_langue_display }}</span>
+          {% endif %}
+        </div>
+        {% endfor %}
+      {% else %}
+      <div style="text-align:center;padding:3rem;color:var(--text-muted)">
+        <div style="font-size:3rem;margin-bottom:1rem">📅</div>
+        <p>Aucun programme pour ce jour.</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Émissions — Kepaar FM 99.7{% endblock %}
+
+{% block content %}
+<section class="archive" style="padding-top:5rem">
+  <div class="inner">
+    <div class="section-label"><span>Émissions — Xeet yi</span></div>
+    <h2 class="section-title">Historique des émissions<br>
+      <span style="color:var(--gold)">Réécoutez à tout moment</span>
+    </h2>
+    <p class="section-subtitle">
+      Retrouvez toutes nos émissions archivées. Écoutez, téléchargez et partagez.
+    </p>
+
+    <!-- FILTRES -->
+    <form method="GET" style="margin:2rem 0">
+      <div style="margin-bottom:1rem">
+        <p style="font-size:0.72rem;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.6rem;font-weight:600">Par émission</p>
+        <div class="filter-group">
+          <a href="?" class="filter-btn {% if not request.GET.type %}active{% endif %}">Toutes</a>
+          {% for type in types %}
+          <a href="?type={{ type.slug }}{% if request.GET.mois %}&mois={{ request.GET.mois }}{% endif %}"
+             class="filter-btn {% if request.GET.type == type.slug %}active{% endif %}">
+            {{ type.icone }} {{ type.nom }}
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+        <div>
+          <p style="font-size:0.72rem;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.6rem;font-weight:600">Par mois</p>
+          <select name="mois" class="form-select" onchange="this.form.submit()" style="width:auto">
+            <option value="">Tous les mois</option>
+            <option value="1" {% if request.GET.mois == '1' %}selected{% endif %}>Janvier</option>
+            <option value="2" {% if request.GET.mois == '2' %}selected{% endif %}>Février</option>
+            <option value="3" {% if request.GET.mois == '3' %}selected{% endif %}>Mars</option>
+            <option value="4" {% if request.GET.mois == '4' %}selected{% endif %}>Avril</option>
+            <option value="5" {% if request.GET.mois == '5' %}selected{% endif %}>Mai</option>
+            <option value="6" {% if request.GET.mois == '6' %}selected{% endif %}>Juin</option>
+            <option value="7" {% if request.GET.mois == '7' %}selected{% endif %}>Juillet</option>
+            <option value="8" {% if request.GET.mois == '8' %}selected{% endif %}>Août</option>
+            <option value="9" {% if request.GET.mois == '9' %}selected{% endif %}>Septembre</option>
+            <option value="10" {% if request.GET.mois == '10' %}selected{% endif %}>Octobre</option>
+            <option value="11" {% if request.GET.mois == '11' %}selected{% endif %}>Novembre</option>
+            <option value="12" {% if request.GET.mois == '12' %}selected{% endif %}>Décembre</option>
+          </select>
+        </div>
+        <div style="margin-left:auto">
+          <div class="search-box">
+            <span style="color:var(--text-muted)">🔍</span>
+            <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Rechercher une émission...">
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!-- GRILLE EMISSIONS -->
+    {% if emissions %}
+    <div class="audio-grid">
+      {% for emission in emissions %}
+      <div class="audio-card">
+        <div class="audio-card-top">
+          <div class="audio-thumb">
+            {% if emission.type_emission %}{{ emission.type_emission.icone }}{% else %}🎙️{% endif %}
+          </div>
+          <div class="audio-meta">
+            {% if emission.type_emission %}
+            <div class="emission">{{ emission.type_emission.nom }}</div>
+            {% endif %}
+            <h4>{{ emission.titre }}</h4>
+            <div class="date">📅 {{ emission.date_diffusion|date:"d M Y" }}</div>
+          </div>
+        </div>
+        {% if emission.description %}
+        <p style="font-size:0.78rem;color:var(--text-muted);line-height:1.5;margin-bottom:0.8rem">
+          {{ emission.description|truncatechars:100 }}
+        </p>
+        {% endif %}
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.8rem">
+          {% if emission.langue %}
+          <span class="audio-tag tag-tafsir">{{ emission.get_langue_display }}</span>
+          {% endif %}
+          {% if emission.animateur %}
+          <span style="font-size:0.72rem;color:var(--text-muted)">🎙️ {{ emission.animateur.nom }}</span>
+          {% endif %}
+          {% if emission.nb_ecoutes %}
+          <span style="font-size:0.72rem;color:var(--text-muted)">▶ {{ emission.nb_ecoutes }} écoutes</span>
+          {% endif %}
+        </div>
+        <div class="audio-player-mini">
+          <audio src="{{ emission.fichier_audio.url }}" id="audio-{{ emission.pk }}"></audio>
+          <button class="btn-play-mini" onclick="playMini('{{ emission.pk }}', this)">▶</button>
+          <div class="progress-bar" onclick="seekAudio(event, this, '{{ emission.pk }}')">
+            <div class="progress-fill" id="prog-{{ emission.pk }}"></div>
+          </div>
+          <span class="duration">{{ emission.duree }}</span>
+          <a href="{{ emission.fichier_audio.url }}" download class="btn-dl" title="Télécharger">⬇️</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align:center;padding:4rem;color:var(--text-muted)">
+      <div style="font-size:3rem;margin-bottom:1rem">🎙️</div>
+      <p>Aucune émission trouvée pour cette recherche.</p>
+      <a href="{% url 'emissions:liste' %}" style="color:var(--gold);text-decoration:none;margin-top:1rem;display:inline-block">
+        Voir toutes les émissions
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
